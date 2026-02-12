@@ -1,0 +1,118 @@
+.timeGrid {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.headerRow {
+  display: flex;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--tempora-border);
+}
+
+.gutterHeader {
+  width: var(--tempora-gutter-width);
+  flex-shrink: 0;
+}
+
+.headerCell {
+  flex: 1;
+  min-width: 0;
+  border-left: 1px solid var(--tempora-border);
+}
+
+.scrollContainer {
+  display: flex;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.gutter {
+  position: relative;
+  width: var(--tempora-gutter-width);
+  flex-shrink: 0;
+}
+
+.timezoneGutter {
+  position: relative;
+  width: var(--tempora-gutter-width);
+  flex-shrink: 0;
+  border-right: 1px solid var(--tempora-border-light);
+}
+
+.timezoneAbbr {
+  position: absolute;
+  top: -2px;
+  right: 8px;
+  font-size: 10px;
+  color: var(--tempora-text-secondary);
+  white-space: nowrap;
+}
+
+.gutterLabel {
+  position: absolute;
+  right: 8px;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: var(--tempora-text-secondary);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.columns {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.column {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  border-left: 1px solid var(--tempora-border);
+}
+
+.columnToday {
+  background: rgba(232, 240, 254, 0.15);
+}
+
+.columnDragOver {
+  background: rgba(232, 240, 254, 0.25);
+}
+
+.slot {
+  border-bottom: 1px solid var(--tempora-border-light);
+  box-sizing: border-box;
+  pointer-events: none;
+
+  &:nth-child(even) {
+    border-bottom-color: var(--tempora-border);
+  }
+}
+
+.currentTimeIndicator {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.currentTimeDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--tempora-current-time);
+  margin-left: -6px;
+  flex-shrink: 0;
+}
+
+.currentTimeLine {
+  height: 2px;
+  background: var(--tempora-current-time);
+  flex: 1;
+}

@@ -1,0 +1,25 @@
+.allDayRow {
+  display: flex;
+  border-bottom: 1px solid var(--tempora-border);
+  min-height: 28px;
+}
+
+.gutterCell {
+  width: var(--tempora-gutter-width);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  font-size: 11px;
+  color: var(--tempora-text-secondary);
+}
+
+.dayCell {
+  flex: 1;
+  padding: 2px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  border-left: 1px solid var(--tempora-border);
+}

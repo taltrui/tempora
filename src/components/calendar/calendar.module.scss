@@ -1,0 +1,27 @@
+@use '../../styles/variables' as *;
+
+.calendar {
+  @include tempora-defaults;
+
+  display: flex;
+  user-select: none;
+  -webkit-user-select: none;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: var(--tempora-font-family);
+  font-size: var(--tempora-font-size);
+  color: var(--tempora-text-primary);
+  background: var(--tempora-bg);
+  box-sizing: border-box;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--tempora-primary);
+    outline-offset: -2px;
+  }
+}

@@ -1,0 +1,60 @@
+.dayCell {
+  min-height: 100px;
+  padding: 2px;
+  border-right: 1px solid var(--tempora-border);
+  border-bottom: 1px solid var(--tempora-border);
+  overflow: hidden;
+}
+
+.dateNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin: 2px auto 4px;
+  border-radius: 50%;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: var(--tempora-text-primary);
+
+  &:hover {
+    background: #f1f3f4;
+  }
+}
+
+.today {
+  background: var(--tempora-primary);
+  color: var(--tempora-text-on-primary);
+
+  &:hover {
+    background: var(--tempora-primary-hover);
+  }
+}
+
+.outside {
+  color: var(--tempora-text-secondary);
+}
+
+.events {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.showMore {
+  border: none;
+  background: none;
+  color: var(--tempora-text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 1px 4px;
+  text-align: left;
+
+  &:hover {
+    background: #f1f3f4;
+    border-radius: 4px;
+  }
+}

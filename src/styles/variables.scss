@@ -1,0 +1,40 @@
+$tempora-defaults: (
+  --tempora-bg: #fff,
+  --tempora-bg-secondary: #f8f9fa,
+  --tempora-bg-today: #e8f0fe,
+  --tempora-bg-weekend: transparent,
+  --tempora-bg-outside: transparent,
+
+  --tempora-text-primary: #3c4043,
+  --tempora-text-secondary: #70757a,
+  --tempora-text-disabled: #dadce0,
+  --tempora-text-on-primary: #fff,
+
+  --tempora-primary: #1a73e8,
+  --tempora-primary-hover: #1765cc,
+
+  --tempora-border: #dadce0,
+  --tempora-border-light: #e8eaed,
+
+  --tempora-event-default-bg: #039be5,
+  --tempora-event-default-text: #fff,
+
+  --tempora-current-time: #ea4335,
+
+  --tempora-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12),
+  --tempora-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15),
+  --tempora-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16),
+
+  --tempora-font-family: (-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif),
+  --tempora-font-size: 14px,
+
+  --tempora-toolbar-height: 56px,
+  --tempora-gutter-width: 60px,
+  --tempora-header-height: 68px,
+);
+
+@mixin tempora-defaults {
+  @each $prop, $value in $tempora-defaults {
+    #{$prop}: #{$value};
+  }
+}

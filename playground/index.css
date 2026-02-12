@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --docs-bg: #fafaf9;
+  --docs-bg-deep: #f0efed;
+  --docs-bg-card: #ffffff;
+  --docs-text: #1c1917;
+  --docs-text-secondary: #57534e;
+  --docs-text-muted: #a8a29e;
+  --docs-accent: #c2410c;
+  --docs-accent-light: #fff7ed;
+  --docs-accent-subtle: #fed7aa;
+  --docs-border: #e7e5e4;
+  --docs-border-subtle: #f5f5f4;
+  --docs-code-bg: #1c1917;
+  --docs-code-text: #fafaf9;
+  --docs-radius: 10px;
+  --docs-radius-lg: 16px;
+  --docs-font-display: 'Instrument Serif', Georgia, serif;
+  --docs-font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --docs-font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-padding-top: 32px;
+}
+
+body {
+  font-family: var(--docs-font-body);
+  color: var(--docs-text);
+  background: var(--docs-bg);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+code,
+pre {
+  font-family: var(--docs-font-mono);
+}
+
+::selection {
+  background: var(--docs-accent);
+  color: white;
+}

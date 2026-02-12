@@ -1,0 +1,51 @@
+@use '../../../styles/mixins' as *;
+
+.eventChip {
+  touch-action: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 20px;
+  cursor: pointer;
+  @include text-ellipsis;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  @include focus-outline;
+}
+
+.allDay {
+  color: var(--tempora-text-on-primary);
+  padding: 1px 6px;
+  border-radius: 4px;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.time {
+  color: var(--tempora-text-secondary);
+  flex-shrink: 0;
+}
+
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dragging {
+  cursor: grabbing;
+}
