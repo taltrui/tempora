@@ -1,3 +1,4 @@
+import { useState, useCallback } from 'react';
 import { NAV_SECTIONS } from './nav.ts';
 import { HeroSection } from './sections/hero-section.tsx';
 import { InstallSection } from './sections/install-section.tsx';
@@ -20,9 +21,29 @@ import { CssVariablesSection } from './sections/css-variables-section.tsx';
 import s from './docs.module.scss';
 
 export default function App() {
+  const [navOpen, setNavOpen] = useState(false);
+
+  const closeNav = useCallback(() => setNavOpen(false), []);
+
   return (
     <div className={s.layout}>
-      <aside className={s.sidebar}>
+      <button
+        className={s.menuBtn}
+        onClick={() => setNavOpen(o => !o)}
+        aria-label="Toggle navigation"
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          {navOpen ? (
+            <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          ) : (
+            <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          )}
+        </svg>
+      </button>
+
+      {navOpen && <div className={s.overlay} onClick={closeNav} />}
+
+      <aside className={`${s.sidebar} ${navOpen ? s.sidebarOpen : ''}`}>
         <div className={s.brand}>
           <span className={s.brandIcon}>T</span>
           <div>
@@ -35,7 +56,7 @@ export default function App() {
             'group' in item ? (
               <span key={i} className={s.navGroup}>{item.group}</span>
             ) : (
-              <a key={item.id} href={`#${item.id}`} className={s.navLink}>
+              <a key={item.id} href={`#${item.id}`} className={s.navLink} onClick={closeNav}>
                 {item.label}
               </a>
             )

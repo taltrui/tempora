@@ -1,9 +1,10 @@
 import type { TimeSlot } from '../../../types/datetime.ts';
+import { useCalendarConfig } from '../../../context/calendar-context.ts';
 import styles from './time-grid.module.scss';
 
 interface TimezoneGutterProps {
   timezone: string;
-  slots: TimeSlot[];
+  timeSlots: TimeSlot[];
   totalHeight: number;
   minutesToPixels: (minutes: number) => number;
 }
@@ -32,7 +33,8 @@ function getTimezoneAbbr(timezone: string): string {
   }
 }
 
-export function TimezoneGutter({ timezone, slots, totalHeight, minutesToPixels }: TimezoneGutterProps) {
+export function TimezoneGutter({ timezone, timeSlots, totalHeight, minutesToPixels }: TimezoneGutterProps) {
+  const { slots } = useCalendarConfig();
   const abbr = getTimezoneAbbr(timezone);
   const refDate = new Date();
   refDate.setHours(0, 0, 0, 0);
@@ -44,14 +46,24 @@ export function TimezoneGutter({ timezone, slots, totalHeight, minutesToPixels }
       data-testid="timezone-gutter"
     >
       <span className={styles.timezoneAbbr}>{abbr}</span>
-      {slots.map((slot) => {
+      {timeSlots.map((slot) => {
         const isHourMark = slot.start % 60 === 0;
         if (!isHourMark) return null;
 
         const slotDate = new Date(refDate);
         slotDate.setMinutes(slot.start);
-        const label = formatTimeInTimezone(slotDate, timezone);
         const top = minutesToPixels(slot.start);
+        const isFirst = slot.start === timeSlots[0].start;
+
+        if (slots?.timeGutterLabel && !isFirst) {
+          return (
+            <span key={slot.start} className={styles.gutterLabel} style={{ top: `${top}px` }}>
+              <slots.timeGutterLabel time={slotDate} timezone={timezone} />
+            </span>
+          );
+        }
+
+        const label = formatTimeInTimezone(slotDate, timezone);
 
         return (
           <span
@@ -59,7 +71,7 @@ export function TimezoneGutter({ timezone, slots, totalHeight, minutesToPixels }
             className={styles.gutterLabel}
             style={{ top: `${top}px` }}
           >
-            {slot.start === slots[0].start ? '' : label}
+            {isFirst ? '' : label}
           </span>
         );
       })}

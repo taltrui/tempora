@@ -6,6 +6,7 @@ import type { LayoutedEvent } from '../../../utils/layout.ts';
 import type { DragData } from '../../../types/dnd.ts';
 import { isDragData } from '../../../types/dnd.ts';
 import { useCalendarConfig } from '../../../context/calendar-context.ts';
+import { useCalendarState } from '../../../context/calendar-context.ts';
 import { getEventColors } from '../../../utils/event.ts';
 import { clsx } from '../../../utils/clsx.ts';
 import { EventBlockContent } from './event-block-content.tsx';
@@ -17,7 +18,8 @@ interface EventBlockProps {
 }
 
 export const EventBlock = memo(function EventBlock({ layoutedEvent }: EventBlockProps) {
-  const { onEventPress, onEventDoubleClick, draggableEnabled, resizableEnabled, timeGridConfig } = useCalendarConfig();
+  const { onEventPress, onEventDoubleClick, draggableEnabled, resizableEnabled, timeGridConfig, slots } = useCalendarConfig();
+  const { view } = useCalendarState();
   const { event, column, totalColumns, top, height } = layoutedEvent;
   const { bg: bgColor, text: textColor } = getEventColors(event.color);
 
@@ -120,7 +122,7 @@ export const EventBlock = memo(function EventBlock({ layoutedEvent }: EventBlock
     }
   };
 
-  return (
+  const block = (
     <div
       ref={setNodeRef}
       {...attributes}
@@ -135,8 +137,14 @@ export const EventBlock = memo(function EventBlock({ layoutedEvent }: EventBlock
       aria-label={ariaLabel}
     >
       {isResizable && <ResizeHandle event={event} position="top" />}
-      <EventBlockContent event={event} />
+      {slots?.eventContent ? <slots.eventContent event={event} view={view} /> : <EventBlockContent event={event} />}
       {isResizable && <ResizeHandle event={event} position="bottom" />}
     </div>
   );
+
+  if (slots?.eventWrapper) {
+    return <slots.eventWrapper event={event}>{block}</slots.eventWrapper>;
+  }
+
+  return block;
 });

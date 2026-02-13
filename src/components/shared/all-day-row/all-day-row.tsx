@@ -8,11 +8,12 @@ interface AllDayRowProps {
   dates: Date[];
   events: CalendarEvent[];
   hasSecondaryTimezone?: boolean;
+  scrollbarWidth?: number;
 }
 
-export function AllDayRow({ dates, events, hasSecondaryTimezone }: AllDayRowProps) {
+export function AllDayRow({ dates, events, hasSecondaryTimezone, scrollbarWidth }: AllDayRowProps) {
   return (
-    <div className={styles.allDayRow}>
+    <div className={styles.allDayRow} style={scrollbarWidth ? { paddingRight: scrollbarWidth } : undefined}>
       {hasSecondaryTimezone && <div className={styles.gutterCell} />}
       <div className={styles.gutterCell}>all-day</div>
       {dates.map((date) => {

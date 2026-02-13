@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { isToday as isTodayFn, isSameDay } from 'date-fns';
 import type { CalendarEvent } from '../../../types/event.ts';
 import type { TimeGridConfig, TimeSlot } from '../../../types/datetime.ts';
@@ -53,6 +53,8 @@ export function TimeGrid({ dates, events, config }: TimeGridProps) {
   const { slots, totalHeight, minutesToPixels } = useTimeGrid(config);
   const { timezones } = useCalendarConfig();
 
+  const [scrollbarWidth, setScrollbarWidth] = useState(0);
+
   const allDayEvents: CalendarEvent[] = [];
   const timedEvents: CalendarEvent[] = [];
   for (const e of events) {
@@ -61,15 +63,16 @@ export function TimeGrid({ dates, events, config }: TimeGridProps) {
   const hasSecondaryTimezone = !!timezones?.secondary;
 
   useEffect(() => {
-    if (scrollRef.current) {
-      const scrollTo = minutesToPixels(8 * 60);
-      scrollRef.current.scrollTop = scrollTo;
+    const el = scrollRef.current;
+    if (el) {
+      setScrollbarWidth(el.offsetWidth - el.clientWidth);
+      el.scrollTop = minutesToPixels(8 * 60);
     }
   }, [minutesToPixels]);
 
   return (
     <div className={styles.timeGrid} role="grid" aria-label="Calendar time grid">
-      <div className={styles.headerRow} role="row">
+      <div className={styles.headerRow} role="row" style={{ paddingRight: scrollbarWidth }}>
         {hasSecondaryTimezone && <div className={styles.gutterHeader} />}
         <div className={styles.gutterHeader} />
         {dates.map((date) => (
@@ -79,19 +82,19 @@ export function TimeGrid({ dates, events, config }: TimeGridProps) {
         ))}
       </div>
       {allDayEvents.length > 0 && (
-        <AllDayRow dates={dates} events={allDayEvents} hasSecondaryTimezone={hasSecondaryTimezone} />
+        <AllDayRow dates={dates} events={allDayEvents} hasSecondaryTimezone={hasSecondaryTimezone} scrollbarWidth={scrollbarWidth} />
       )}
       <div className={styles.scrollContainer} ref={scrollRef}>
         {hasSecondaryTimezone && (
           <TimezoneGutter
             timezone={timezones!.secondary!}
-            slots={slots}
+            timeSlots={slots}
             totalHeight={totalHeight}
             minutesToPixels={minutesToPixels}
           />
         )}
         <TimeGutter
-          slots={slots}
+          timeSlots={slots}
           minutesToPixels={minutesToPixels}
           totalHeight={totalHeight}
         />

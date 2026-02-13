@@ -1,4 +1,5 @@
 import type { CalendarView } from './view.ts';
+import type { CalendarEvent } from './event.ts';
 
 export interface ToolbarSlotProps {
   date: Date;
