@@ -26,9 +26,8 @@ export function Calendar<TMeta = Record<string, unknown>>(
   );
   const monthMaxEvents = props.monthMaxEvents ?? DEFAULT_MONTH_MAX_EVENTS;
 
-  validateTimeGridConfig(timeGridConfig);
-
   if (process.env.NODE_ENV !== 'production') {
+    validateTimeGridConfig(timeGridConfig);
     validateEvents(props.events as CalendarEvent[]);
   }
 
@@ -38,6 +37,11 @@ export function Calendar<TMeta = Record<string, unknown>>(
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('input, textarea, select, [contenteditable="true"]')) {
+      return;
+    }
+
     switch (e.key) {
       case 'ArrowLeft':
         e.preventDefault();

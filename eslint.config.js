@@ -4,7 +4,7 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 
-export default [
+export default tseslint.config(
   { ignores: ['dist'] },
   {
     files: ['**/*.{ts,tsx}'],
@@ -19,4 +19,10 @@ export default [
       globals: globals.browser,
     },
   },
-]
+  {
+    files: ['playground/components/ui/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
+)

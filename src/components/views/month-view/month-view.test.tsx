@@ -25,13 +25,13 @@ describe('MonthView', () => {
       />,
     );
 
-    expect(screen.getByText('SUN')).toBeInTheDocument();
-    expect(screen.getByText('MON')).toBeInTheDocument();
-    expect(screen.getByText('TUE')).toBeInTheDocument();
-    expect(screen.getByText('WED')).toBeInTheDocument();
-    expect(screen.getByText('THU')).toBeInTheDocument();
-    expect(screen.getByText('FRI')).toBeInTheDocument();
-    expect(screen.getByText('SAT')).toBeInTheDocument();
+    expect(screen.getByText('Sun')).toBeInTheDocument();
+    expect(screen.getByText('Mon')).toBeInTheDocument();
+    expect(screen.getByText('Tue')).toBeInTheDocument();
+    expect(screen.getByText('Wed')).toBeInTheDocument();
+    expect(screen.getByText('Thu')).toBeInTheDocument();
+    expect(screen.getByText('Fri')).toBeInTheDocument();
+    expect(screen.getByText('Sat')).toBeInTheDocument();
   });
 
   it('renders correct number of day cells for Feb 2026', () => {
@@ -219,8 +219,8 @@ describe('MonthView', () => {
     );
 
     const headers = screen.getAllByTestId('weekday-header');
-    expect(headers[0].textContent).toBe('MON');
-    expect(headers[6].textContent).toBe('SUN');
+    expect(headers[0].textContent).toBe('Mon');
+    expect(headers[6].textContent).toBe('Sun');
   });
 
   it('renders event chip with correct event color dot for timed events', () => {

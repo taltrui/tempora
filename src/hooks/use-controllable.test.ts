@@ -80,7 +80,7 @@ describe('useControllable', () => {
       const { result, rerender } = renderHook(
         ({ value }: { value?: string }) =>
           useControllable({ value, defaultValue: 'default' }),
-        { initialProps: { value: undefined } },
+        { initialProps: { value: undefined } as { value?: string } },
       );
 
       act(() => {
@@ -89,7 +89,7 @@ describe('useControllable', () => {
 
       expect(result.current[0]).toBe('updated');
 
-      rerender({ value: 'ignored-controlled' as string | undefined });
+      rerender({ value: 'ignored-controlled' });
 
       expect(result.current[0]).toBe('updated');
     });

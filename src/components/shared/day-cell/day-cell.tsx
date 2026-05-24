@@ -16,9 +16,10 @@ interface DayCellProps {
 }
 
 export function DayCell({ date, events, isToday, isOutsideMonth, maxEvents }: DayCellProps) {
-  const { onDateClick, onShowMore, slots } = useCalendarConfig();
+  const { onDateClick, onShowMore, slots, locale } = useCalendarConfig();
   const { view } = useCalendarState();
   const dateKey = getDateKey(date);
+  const formatOpts = locale ? { locale } : undefined;
 
   if (slots?.dayCell) {
     const DayCellSlot = slots.dayCell;
@@ -44,7 +45,7 @@ export function DayCell({ date, events, isToday, isOutsideMonth, maxEvents }: Da
         data-testid={`date-number-${dateKey}`}
         aria-current={isToday ? 'date' : undefined}
       >
-        {format(date, 'd')}
+        {format(date, 'd', formatOpts)}
       </button>
       <div className={styles.events}>
         <SortableContext items={visibleEvents.map(e => `event-chip-move-${e.id}`)} strategy={verticalListSortingStrategy}>

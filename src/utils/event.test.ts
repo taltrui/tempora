@@ -50,6 +50,15 @@ describe('getEventColors', () => {
     expect(result.bg).toBe('#ff0000');
     expect(result.text).toBe('#fff');
   });
+
+  it('uses dark text for light custom hex colors', () => {
+    expect(getEventColors('#ffff00').text).toBe('#3c4043');
+    expect(getEventColors('#fff').text).toBe('#3c4043');
+  });
+
+  it('uses white text for dark custom hex colors', () => {
+    expect(getEventColors('#000000').text).toBe('#fff');
+  });
 });
 
 describe('sortEvents', () => {
