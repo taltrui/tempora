@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import type { TimeSlot } from '../../../types/datetime.ts';
 import { useCalendarConfig } from '../../../context/calendar-context.ts';
 import styles from './time-grid.module.scss';
@@ -9,7 +10,8 @@ interface TimeGutterProps {
 }
 
 export function TimeGutter({ timeSlots, minutesToPixels, totalHeight }: TimeGutterProps) {
-  const { slots } = useCalendarConfig();
+  const { slots, locale } = useCalendarConfig();
+  const formatOpts = locale ? { locale } : undefined;
   const refDate = new Date();
   refDate.setHours(0, 0, 0, 0);
 
@@ -22,9 +24,10 @@ export function TimeGutter({ timeSlots, minutesToPixels, totalHeight }: TimeGutt
         const top = minutesToPixels(slot.start);
         const isFirst = slot.start === timeSlots[0].start;
 
+        const slotDate = new Date(refDate);
+        slotDate.setMinutes(slot.start);
+
         if (slots?.timeGutterLabel && !isFirst) {
-          const slotDate = new Date(refDate);
-          slotDate.setMinutes(slot.start);
           return (
             <span key={slot.start} className={styles.gutterLabel} style={{ top: `${top}px` }}>
               <slots.timeGutterLabel time={slotDate} />
@@ -32,15 +35,13 @@ export function TimeGutter({ timeSlots, minutesToPixels, totalHeight }: TimeGutt
           );
         }
 
-        const hourLabel = slot.label.replace(':00 ', ' ');
-
         return (
           <span
             key={slot.start}
             className={styles.gutterLabel}
             style={{ top: `${top}px` }}
           >
-            {isFirst ? '' : hourLabel}
+            {isFirst ? '' : format(slotDate, 'h a', formatOpts)}
           </span>
         );
       })}

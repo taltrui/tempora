@@ -6,7 +6,7 @@ import { MiniCalendar } from '../../shared/mini-calendar/mini-calendar.tsx';
 import styles from './year-view.module.scss';
 
 export function YearView() {
-  const { weekStartsOn, onDateClick } = useCalendarConfig();
+  const { weekStartsOn, onDateClick, locale } = useCalendarConfig();
   const { date, view } = useCalendarState();
 
   const months = useMemo(
@@ -25,6 +25,7 @@ export function YearView() {
           weekStartsOn={weekStartsOn}
           today={today}
           onDateClick={(d) => onDateClick?.(d, view)}
+          locale={locale}
         />
       ))}
     </div>

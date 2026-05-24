@@ -24,6 +24,7 @@
     "build:playground": "vite build --config vite.config.playground.ts",
     "preview": "vite preview --config vite.config.playground.ts",
     "lint": "eslint .",
+    "typecheck": "tsc -b",
     "test": "vitest",
     "test:run": "vitest run",
     "prepublishOnly": "pnpm run build"

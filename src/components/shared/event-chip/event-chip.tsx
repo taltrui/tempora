@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { format } from 'date-fns';
+import { format, type Locale } from 'date-fns';
 import { useSortable } from '@dnd-kit/sortable';
 import type { CalendarEvent } from '../../../types/event.ts';
 import type { DragData } from '../../../types/dnd.ts';
@@ -12,15 +12,16 @@ interface EventChipProps {
   event: CalendarEvent;
 }
 
-function formatChipTime(date: Date): string {
+function formatChipTime(date: Date, locale?: Locale): string {
+  const formatOpts = locale ? { locale } : undefined;
   if (date.getMinutes() === 0) {
-    return format(date, 'h a');
+    return format(date, 'h a', formatOpts);
   }
-  return format(date, 'h:mm a');
+  return format(date, 'h:mm a', formatOpts);
 }
 
 export const EventChip = memo(function EventChip({ event }: EventChipProps) {
-  const { onEventPress, draggableEnabled } = useCalendarConfig();
+  const { onEventPress, draggableEnabled, locale } = useCalendarConfig();
   const color = resolveEventColor(event.color);
 
   const isDraggable = (event.draggable !== false) && draggableEnabled;
@@ -56,7 +57,7 @@ export const EventChip = memo(function EventChip({ event }: EventChipProps) {
 
   const ariaLabel = event.allDay
     ? `${event.title}, All day`
-    : `${event.title}, ${format(event.start, 'h:mm a')}`;
+    : `${event.title}, ${format(event.start, 'h:mm a', locale ? { locale } : undefined)}`;
 
   const chipStyle: React.CSSProperties = {
     ...(event.allDay && { backgroundColor: color }),
@@ -86,7 +87,7 @@ export const EventChip = memo(function EventChip({ event }: EventChipProps) {
             style={{ backgroundColor: color }}
             data-testid={`event-chip-dot-${event.id}`}
           />
-          <span className={styles.time}>{formatChipTime(event.start)}</span>
+          <span className={styles.time}>{formatChipTime(event.start, locale)}</span>
           <span className={styles.title}>{event.title}</span>
         </>
       )}

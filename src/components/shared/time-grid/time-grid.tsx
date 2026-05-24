@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useMemo } from 'react';
 import { isToday as isTodayFn, isSameDay } from 'date-fns';
 import type { CalendarEvent } from '../../../types/event.ts';
 import type { TimeGridConfig, TimeSlot } from '../../../types/datetime.ts';
@@ -55,11 +55,21 @@ export function TimeGrid({ dates, events, config }: TimeGridProps) {
 
   const [scrollbarWidth, setScrollbarWidth] = useState(0);
 
-  const allDayEvents: CalendarEvent[] = [];
-  const timedEvents: CalendarEvent[] = [];
-  for (const e of events) {
-    (e.allDay ? allDayEvents : timedEvents).push(e);
-  }
+  const { allDayEvents, dayColumns } = useMemo(() => {
+    const allDay: CalendarEvent[] = [];
+    const timed: CalendarEvent[] = [];
+    for (const e of events) {
+      (e.allDay ? allDay : timed).push(e);
+    }
+    const columns = dates.map((date) => ({
+      date,
+      events: timed.filter(
+        (e) => isSameDay(e.start, date) || isSameDay(e.end, date) || (e.start < date && e.end > date),
+      ),
+    }));
+    return { allDayEvents: allDay, dayColumns: columns };
+  }, [events, dates]);
+
   const hasSecondaryTimezone = !!timezones?.secondary;
 
   useEffect(() => {
@@ -99,22 +109,17 @@ export function TimeGrid({ dates, events, config }: TimeGridProps) {
           totalHeight={totalHeight}
         />
         <div className={styles.columns}>
-          {dates.map((date) => {
-            const dayEvents = timedEvents.filter(
-              (e) => isSameDay(e.start, date) || isSameDay(e.end, date) || (e.start < date && e.end > date),
-            );
-            return (
-              <EventsForDay
-                key={date.toISOString()}
-                date={date}
-                events={dayEvents}
-                config={config}
-                slots={slots}
-                totalHeight={totalHeight}
-                minutesToPixels={minutesToPixels}
-              />
-            );
-          })}
+          {dayColumns.map(({ date, events: dayEvents }) => (
+            <EventsForDay
+              key={date.toISOString()}
+              date={date}
+              events={dayEvents}
+              config={config}
+              slots={slots}
+              totalHeight={totalHeight}
+              minutesToPixels={minutesToPixels}
+            />
+          ))}
         </div>
       </div>
     </div>

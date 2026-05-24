@@ -14,11 +14,22 @@ import {
 } from 'date-fns';
 import type { CalendarView } from '../types/view.ts';
 import type { TimeRange, WeekStartsOn } from '../types/datetime.ts';
+import { DEFAULT_WEEK_STARTS_ON, DEFAULT_N_DAYS, DEFAULT_AGENDA_LENGTH } from './constants.ts';
 
 export function getOrderedWeekdayLabels<T>(labels: T[], weekStartsOn: WeekStartsOn): T[] {
   return Array.from({ length: 7 }, (_, i) => labels[(weekStartsOn + i) % 7]);
 }
-import { DEFAULT_WEEK_STARTS_ON, DEFAULT_N_DAYS, DEFAULT_AGENDA_LENGTH } from './constants.ts';
+
+export function getWeekdayLabels(
+  weekStartsOn: WeekStartsOn,
+  width: 'narrow' | 'short',
+  locale?: Locale,
+): string[] {
+  const base = startOfWeek(new Date(2021, 7, 1), { weekStartsOn });
+  const pattern = width === 'narrow' ? 'EEEEE' : 'EEE';
+  const formatOpts = locale ? { locale } : undefined;
+  return Array.from({ length: 7 }, (_, i) => format(addDays(base, i), pattern, formatOpts));
+}
 
 export function getVisibleDaysForWeek(date: Date, weekStartsOn: WeekStartsOn): Date[] {
   const start = startOfWeek(date, { weekStartsOn });
@@ -42,30 +53,51 @@ export function getDaysForRange(start: Date, end: Date): Date[] {
   return eachDayOfInterval({ start, end });
 }
 
-export function formatDateLabel(date: Date, view: CalendarView, locale?: Locale): string {
+interface FormatDateLabelOptions {
+  weekStartsOn?: WeekStartsOn;
+  nDays?: number;
+  locale?: Locale;
+}
+
+export function formatDateLabel(
+  date: Date,
+  view: CalendarView,
+  opts?: FormatDateLabelOptions,
+): string {
+  const locale = opts?.locale;
   const formatOpts = locale ? { locale } : undefined;
+  const weekStartsOn = opts?.weekStartsOn ?? DEFAULT_WEEK_STARTS_ON;
+
+  const formatRange = (start: Date, end: Date): string => {
+    const sameMonth =
+      start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear();
+    if (sameMonth) {
+      const monthAbbr = format(start, 'MMM', formatOpts);
+      const startDay = format(start, 'd', formatOpts);
+      const endDay = format(end, 'd', formatOpts);
+      const year = format(end, 'yyyy', formatOpts);
+      return `${monthAbbr} ${startDay} \u2013 ${endDay}, ${year}`;
+    }
+
+    const startLabel = format(start, 'MMM d', formatOpts);
+    const endLabel = format(end, 'MMM d', formatOpts);
+    const year = format(end, 'yyyy', formatOpts);
+    return `${startLabel} \u2013 ${endLabel}, ${year}`;
+  };
 
   switch (view) {
     case 'day':
       return format(date, 'EEEE, MMMM d, yyyy', formatOpts);
 
     case 'week':
+      return formatRange(
+        startOfWeek(date, { weekStartsOn }),
+        endOfWeek(date, { weekStartsOn }),
+      );
+
     case 'n-days': {
-      const weekStart = startOfWeek(date, { weekStartsOn: DEFAULT_WEEK_STARTS_ON });
-      const weekEnd = endOfWeek(date, { weekStartsOn: DEFAULT_WEEK_STARTS_ON });
-
-      if (weekStart.getMonth() === weekEnd.getMonth()) {
-        const monthAbbr = format(weekStart, 'MMM', formatOpts);
-        const startDay = format(weekStart, 'd', formatOpts);
-        const endDay = format(weekEnd, 'd', formatOpts);
-        const year = format(weekEnd, 'yyyy', formatOpts);
-        return `${monthAbbr} ${startDay} \u2013 ${endDay}, ${year}`;
-      }
-
-      const startLabel = format(weekStart, 'MMM d', formatOpts);
-      const endLabel = format(weekEnd, 'MMM d', formatOpts);
-      const year = format(weekEnd, 'yyyy', formatOpts);
-      return `${startLabel} \u2013 ${endLabel}, ${year}`;
+      const nDays = opts?.nDays ?? DEFAULT_N_DAYS;
+      return formatRange(date, addDays(date, nDays - 1));
     }
 
     case 'month':

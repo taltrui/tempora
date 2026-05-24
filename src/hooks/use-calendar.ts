@@ -56,8 +56,8 @@ export function useCalendar<TMeta = Record<string, unknown>>(
   );
 
   const dateLabel = useMemo(
-    () => formatDateLabel(date, view, props.locale),
-    [date, view, props.locale],
+    () => formatDateLabel(date, view, { weekStartsOn, nDays, locale: props.locale }),
+    [date, view, weekStartsOn, nDays, props.locale],
   );
 
   const onRangeChangeRef = useRef(props.onRangeChange);

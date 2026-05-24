@@ -16,11 +16,30 @@ export function resolveEventColor(color?: EventColor | string): string {
   return color;
 }
 
-export function getEventColors(color?: EventColor | string): { bg: string; text: string } {
-  return {
-    bg: resolveEventColor(color),
-    text: isLightEventColor(color) ? '#3c4043' : '#fff',
+function contrastTextForHex(hex: string): string | null {
+  const raw = hex.replace('#', '');
+  const normalized =
+    raw.length === 3 ? raw.split('').map((c) => c + c).join('') : raw;
+  if (normalized.length !== 6 || /[^0-9a-fA-F]/.test(normalized)) return null;
+
+  const channel = (start: number) => {
+    const v = parseInt(normalized.slice(start, start + 2), 16) / 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
   };
+  const luminance = 0.2126 * channel(0) + 0.7152 * channel(2) + 0.0722 * channel(4);
+
+  return luminance > 0.5 ? '#3c4043' : '#fff';
+}
+
+export function getEventColors(color?: EventColor | string): { bg: string; text: string } {
+  const bg = resolveEventColor(color);
+  const isNamed = !!color && color in EVENT_COLORS;
+
+  if (!color || isNamed) {
+    return { bg, text: isLightEventColor(color) ? '#3c4043' : '#fff' };
+  }
+
+  return { bg, text: contrastTextForHex(bg) ?? '#fff' };
 }
 
 export function getDateKey(date: Date): string {

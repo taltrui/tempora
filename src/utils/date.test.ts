@@ -7,6 +7,7 @@ import {
   formatDateLabel,
   getVisibleRange,
   getOrderedWeekdayLabels,
+  getWeekdayLabels,
 } from './date.ts';
 
 describe('getOrderedWeekdayLabels', () => {
@@ -27,6 +28,20 @@ describe('getOrderedWeekdayLabels', () => {
   it('works with single-letter labels', () => {
     const letters = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     expect(getOrderedWeekdayLabels(letters, 1)).toEqual(['M', 'T', 'W', 'T', 'F', 'S', 'S']);
+  });
+});
+
+describe('getWeekdayLabels', () => {
+  it('returns short labels starting on Sunday', () => {
+    expect(getWeekdayLabels(0, 'short')).toEqual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']);
+  });
+
+  it('returns short labels starting on Monday', () => {
+    expect(getWeekdayLabels(1, 'short')).toEqual(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
+  });
+
+  it('returns narrow labels ordered by weekStartsOn', () => {
+    expect(getWeekdayLabels(1, 'narrow').join('')).toBe('MTWTFSS');
   });
 });
 
@@ -153,9 +168,14 @@ describe('formatDateLabel', () => {
     expect(formatDateLabel(date, 'week')).toBe('Jan 25 – 31, 2026');
   });
 
-  it('formats n-days view same as week', () => {
+  it('formats n-days view as the visible day range', () => {
     const date = new Date(2026, 1, 11);
-    expect(formatDateLabel(date, 'n-days')).toBe('Feb 8 – 14, 2026');
+    expect(formatDateLabel(date, 'n-days', { nDays: 4 })).toBe('Feb 11 – 14, 2026');
+  });
+
+  it('respects weekStartsOn for the week label', () => {
+    const date = new Date(2026, 1, 11);
+    expect(formatDateLabel(date, 'week', { weekStartsOn: 1 })).toBe('Feb 9 – 15, 2026');
   });
 
   it('formats month view label', () => {

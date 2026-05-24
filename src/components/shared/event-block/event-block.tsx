@@ -18,7 +18,7 @@ interface EventBlockProps {
 }
 
 export const EventBlock = memo(function EventBlock({ layoutedEvent }: EventBlockProps) {
-  const { onEventPress, onEventDoubleClick, draggableEnabled, resizableEnabled, timeGridConfig, slots } = useCalendarConfig();
+  const { onEventPress, onEventDoubleClick, draggableEnabled, resizableEnabled, timeGridConfig, slots, locale } = useCalendarConfig();
   const { view } = useCalendarState();
   const { event, column, totalColumns, top, height } = layoutedEvent;
   const { bg: bgColor, text: textColor } = getEventColors(event.color);
@@ -102,7 +102,8 @@ export const EventBlock = memo(function EventBlock({ layoutedEvent }: EventBlock
     ...(isResizing && { zIndex: 10, boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)' }),
   };
 
-  const ariaLabel = `${event.title}, ${format(event.start, 'h:mm a')} to ${format(event.end, 'h:mm a')}`;
+  const labelFormatOpts = locale ? { locale } : undefined;
+  const ariaLabel = `${event.title}, ${format(event.start, 'h:mm a', labelFormatOpts)} to ${format(event.end, 'h:mm a', labelFormatOpts)}`;
 
   const handleClick = (e: React.MouseEvent) => {
     if (isDragging) return;

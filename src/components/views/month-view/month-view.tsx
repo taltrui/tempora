@@ -2,15 +2,13 @@ import { useMemo } from 'react';
 import { isSameDay } from 'date-fns';
 import { useCalendarConfig, useCalendarState } from '../../../context/calendar-context.ts';
 import { useCurrentTime } from '../../../hooks/use-current-time.ts';
-import { getVisibleDaysForMonth, getOrderedWeekdayLabels } from '../../../utils/date.ts';
+import { getVisibleDaysForMonth, getWeekdayLabels } from '../../../utils/date.ts';
 import { groupEventsByDate, getDateKey } from '../../../utils/event.ts';
 import { DayCell } from '../../shared/day-cell/day-cell.tsx';
 import styles from './month-view.module.scss';
 
-const WEEKDAY_LABELS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-
 export function MonthView() {
-  const { weekStartsOn, monthMaxEvents } = useCalendarConfig();
+  const { weekStartsOn, monthMaxEvents, locale } = useCalendarConfig();
   const { date, visibleEvents } = useCalendarState();
 
   const dates = useMemo(
@@ -24,8 +22,8 @@ export function MonthView() {
   );
 
   const orderedWeekdays = useMemo(
-    () => getOrderedWeekdayLabels(WEEKDAY_LABELS, weekStartsOn),
-    [weekStartsOn],
+    () => getWeekdayLabels(weekStartsOn, 'short', locale),
+    [weekStartsOn, locale],
   );
 
   const today = useCurrentTime();

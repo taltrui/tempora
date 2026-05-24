@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import type { CalendarEvent } from '../../../types/event.ts';
+import { useCalendarConfig } from '../../../context/calendar-context.ts';
 import styles from './event-block.module.scss';
 
 interface EventBlockContentProps {
@@ -7,8 +8,10 @@ interface EventBlockContentProps {
 }
 
 export function EventBlockContent({ event }: EventBlockContentProps) {
-  const startTime = format(event.start, 'h:mm');
-  const endTime = format(event.end, 'h:mm a');
+  const { locale } = useCalendarConfig();
+  const formatOpts = locale ? { locale } : undefined;
+  const startTime = format(event.start, 'h:mm', formatOpts);
+  const endTime = format(event.end, 'h:mm a', formatOpts);
 
   return (
     <>

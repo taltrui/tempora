@@ -8,9 +8,10 @@ import { clsx } from '../../../utils/clsx.ts';
 import styles from './agenda-view.module.scss';
 
 export function AgendaView() {
-  const { onEventPress, viewConfig } = useCalendarConfig();
+  const { onEventPress, viewConfig, locale } = useCalendarConfig();
   const { date, visibleEvents } = useCalendarState();
 
+  const formatOpts = locale ? { locale } : undefined;
   const agendaLength = viewConfig?.agenda?.length ?? DEFAULT_AGENDA_LENGTH;
 
   const agendaDates = useMemo(() => {
@@ -57,11 +58,11 @@ export function AgendaView() {
         return (
           <div key={key} className={styles.dateGroup} data-testid="agenda-date-group">
             <div className={styles.dateLabel}>
-              <span className={styles.dayOfWeek}>{format(groupDate, 'EEE')}</span>
+              <span className={styles.dayOfWeek}>{format(groupDate, 'EEE', formatOpts)}</span>
               <span className={clsx(styles.dateNumber, isToday && styles.today)}>
-                {format(groupDate, 'd')}
+                {format(groupDate, 'd', formatOpts)}
               </span>
-              <span className={styles.monthYear}>{format(groupDate, 'MMMM yyyy')}</span>
+              <span className={styles.monthYear}>{format(groupDate, 'MMMM yyyy', formatOpts)}</span>
             </div>
             <div className={styles.eventsList}>
               {events.map((event) => (
@@ -69,7 +70,15 @@ export function AgendaView() {
                   key={event.id}
                   className={styles.agendaEvent}
                   data-testid={`agenda-event-${event.id}`}
+                  role="button"
+                  tabIndex={0}
                   onClick={(e) => onEventPress?.(event, e)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onEventPress?.(event, e as unknown as React.MouseEvent);
+                    }
+                  }}
                 >
                   <span
                     className={styles.colorDot}
@@ -79,7 +88,7 @@ export function AgendaView() {
                   <span className={styles.eventTime}>
                     {event.allDay
                       ? 'All day'
-                      : `${format(event.start, 'h:mm a')} \u2013 ${format(event.end, 'h:mm a')}`}
+                      : `${format(event.start, 'h:mm a', formatOpts)} \u2013 ${format(event.end, 'h:mm a', formatOpts)}`}
                   </span>
                   <span className={styles.eventTitle}>{event.title}</span>
                 </div>

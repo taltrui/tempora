@@ -22,8 +22,8 @@ interface UseDragEventReturn {
 }
 
 function resolveDropDate(overData: Record<string, unknown>): Date | null {
-  if ('date' in overData) return (overData as DropSlotData).date;
-  if ('event' in overData) return startOfDay((overData as DragData).event.start);
+  if ('date' in overData) return (overData as unknown as DropSlotData).date;
+  if ('event' in overData) return startOfDay((overData as unknown as DragData).event.start);
   return null;
 }
 
@@ -41,7 +41,7 @@ function computeMovePayload(
   if (!dropDate) return null;
 
   const { snapDuration, slotHeight, slotDuration, startHour } = options;
-  const allDay = 'allDay' in overData ? (overData as DropSlotData).allDay : false;
+  const allDay = 'allDay' in overData ? (overData as unknown as DropSlotData).allDay : false;
   const duration = dragData.originalEnd.getTime() - dragData.originalStart.getTime();
   const pixelsPerMinute = slotHeight / slotDuration;
   const minuteDelta = event.delta.y / pixelsPerMinute;

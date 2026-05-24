@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
 import type { Locale } from 'date-fns';
 import { DndContext, PointerSensor, TouchSensor, KeyboardSensor, useSensor, useSensors, DragOverlay } from '@dnd-kit/core';
@@ -128,19 +128,22 @@ export function CalendarProvider<TMeta = Record<string, unknown>>({
   }, [handleMoveDragEnd, handleResizeDragEnd]);
 
   const onEventPressRef = useRef(onEventPress);
-  onEventPressRef.current = onEventPress;
   const onEventDoubleClickRef = useRef(onEventDoubleClick);
-  onEventDoubleClickRef.current = onEventDoubleClick;
   const onSlotPressRef = useRef(onSlotPress);
-  onSlotPressRef.current = onSlotPress;
   const onDateClickRef = useRef(onDateClick);
-  onDateClickRef.current = onDateClick;
   const onShowMoreRef = useRef(onShowMore);
-  onShowMoreRef.current = onShowMore;
   const onEventMoveRef = useRef(onEventMove);
-  onEventMoveRef.current = onEventMove;
   const onEventResizeRef = useRef(onEventResize);
-  onEventResizeRef.current = onEventResize;
+
+  useEffect(() => {
+    onEventPressRef.current = onEventPress;
+    onEventDoubleClickRef.current = onEventDoubleClick;
+    onSlotPressRef.current = onSlotPress;
+    onDateClickRef.current = onDateClick;
+    onShowMoreRef.current = onShowMore;
+    onEventMoveRef.current = onEventMove;
+    onEventResizeRef.current = onEventResize;
+  });
 
   const stableOnEventPress = useCallback(
     (...args: Parameters<NonNullable<typeof onEventPress>>) => onEventPressRef.current?.(...args),

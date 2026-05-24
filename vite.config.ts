@@ -7,8 +7,9 @@ export default defineConfig({
   plugins: [
     react(),
     dts({
+      tsconfigPath: './tsconfig.app.json',
       include: ['src'],
-      exclude: ['playground'],
+      exclude: ['playground', 'src/**/*.test.{ts,tsx}', 'src/test/**'],
     }),
   ],
   server: { host: '0.0.0.0' },
@@ -18,6 +19,7 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       formats: ['es'],
       fileName: 'index',
+      cssFileName: 'style',
     },
     rollupOptions: {
       external: [
